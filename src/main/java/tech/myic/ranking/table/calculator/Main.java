@@ -19,62 +19,69 @@ public class Main {
     private static final Map<String, TeamDetails> details = new TreeMap<>();
 
     public static void main(String[] args) throws IOException {
+
         try (BufferedReader r = new BufferedReader(new InputStreamReader(System.in, StandardCharsets.UTF_8))) {
-            String line;
+            printRakings(r);
+        }
+    }
 
-            while ((line = r.readLine()) != null && !line.isEmpty()) {
-                String[] teamsDetails = line.split(",\\s+");
+    private static void printRakings(BufferedReader r) throws IOException {
+        String line;
 
-                String firstTeamDetails = null;
-                try {
-                    firstTeamDetails = getIndividualTeamDetails(teamsDetails, 0);
-                } catch (RankingCalculatorException ex) {
-                    throw new RuntimeException("Unable to get first team details", ex);
-                }
+        while ((line = r.readLine()) != null && !line.isEmpty()) {
+            String[] teamsDetails = line.split(",\\s+");
 
-                if (firstTeamDetails == null) {
-                    System.err.println("Unable to get first team details");
-                    return;
-                }
-
-                String secondTeamDetails = null;
-                try {
-                    secondTeamDetails = getIndividualTeamDetails(teamsDetails, 1);
-                } catch (RankingCalculatorException ex) {
-                    throw new RuntimeException("Unable to get second team details", ex);
-                }
-
-                if (secondTeamDetails == null) {
-                    System.err.println("No second team details");
-                    return;
-                }
-
-                setResultsInMap(firstTeamDetails, secondTeamDetails);
-
+            String firstTeamDetails = null;
+            try {
+                firstTeamDetails = getIndividualTeamDetails(teamsDetails, 0);
+            } catch (RankingCalculatorException ex) {
+                throw new RuntimeException("Unable to get first team details", ex);
             }
 
-            Map<String, Integer> m = new HashMap<>();
+            if (firstTeamDetails == null) {
+                System.err.println("Unable to get first team details");
+                return;
+            }
 
-            for (Map.Entry<String, TeamDetails> entry : details.entrySet()) {
-                TeamDetails t = entry.getValue();
+            String secondTeamDetails = null;
+            try {
+                secondTeamDetails = getIndividualTeamDetails(teamsDetails, 1);
+            } catch (RankingCalculatorException ex) {
+                throw new RuntimeException("Unable to get second team details", ex);
+            }
+
+            if (secondTeamDetails == null) {
+                System.err.println("No second team details");
+                return;
+            }
+
+            setResultsInMap(firstTeamDetails, secondTeamDetails);
+
+        }
+
+        Map<String, Integer> m = new HashMap<>();
+
+        for (Map.Entry<String, TeamDetails> entry : details.entrySet()) {
+            TeamDetails t = entry.getValue();
 //                int point = t.getPoint();
-                m.put(t.getTeamName(), t.getPoint());
+            m.put(t.getTeamName(), t.getPoint());
 //                System.out.println(t.getTeamName() + ", " + point + (point <= 1 ? " pt" : " pts"));
-            }
+        }
 
-            LinkedList<Map.Entry<String, Integer>> l = new LinkedList<>(m.entrySet());
-            Collections.sort(l, (Map.Entry<String, Integer> o1, Map.Entry<String, Integer> o2) -> {
-                int comparison = 0;
-                comparison = o2.getValue().compareTo(o1.getValue());
-                if (comparison == 0) {
-                    comparison = o1.getKey().compareTo(o2.getKey());
-                }
-                return comparison;
-            });
-
-            for (Map.Entry<String, Integer> entry : l) {
-                System.out.println(entry.getKey() + ", " + entry.getValue() + (entry.getValue() <= 1 ? " pt" : " pts"));
+        LinkedList<Map.Entry<String, Integer>> l = new LinkedList<>(m.entrySet());
+        Collections.sort(l, (Map.Entry<String, Integer> o1, Map.Entry<String, Integer> o2) -> {
+            int comparison = 0;
+            comparison = o2.getValue().compareTo(o1.getValue());
+            if (comparison == 0) {
+                comparison = o1.getKey().compareTo(o2.getKey());
             }
+            return comparison;
+        });
+
+        int count = 1;
+        for (Map.Entry<String, Integer> entry : l) {
+            System.out.println(count + ". " + entry.getKey() + ", " + entry.getValue() + (entry.getValue() <= 1 ? " pt" : " pts"));
+            count += 1;
         }
     }
 
