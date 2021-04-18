@@ -1,4 +1,4 @@
-package tech.myic.ranking.table.calculator;
+package tech.myic.ranking.table.calculator.detail;
 
 /**
  *
@@ -6,7 +6,7 @@ package tech.myic.ranking.table.calculator;
  */
 public class TeamDetails {
 
-    private String teamName;
+    private final String teamName;
     private int score;
     private int point;
 
@@ -18,10 +18,6 @@ public class TeamDetails {
 
     public String getTeamName() {
         return teamName;
-    }
-
-    public void setTeamName(String teamName) {
-        this.teamName = teamName;
     }
 
     public int getScore() {
